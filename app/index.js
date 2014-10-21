@@ -10,6 +10,30 @@ var fs = require("fs");
 
 var GruntGenBase = yeoman.generators.Base.extend({
 
+	installGrunt: function () {
+		var done = this.async();
+		var options = { "save": true };
+		this.npmInstall(["grunt"], options, done);
+	},
+
+	installGruntClean: function () {
+		var done = this.async();
+		var options = { "save": true };
+		this.npmInstall(["grunt-contrib-clean"], options, done);
+	},
+
+	installGruntConnect: function () {
+		var done = this.async();
+		var options = { "save": true };
+		this.npmInstall(["grunt-contrib-connect"], options, done);
+	},
+
+	installGruntCopy: function () {
+		var done = this.async();
+		var options = { "save": true };
+		this.npmInstall(["grunt-contrib-copy"], options, done);
+	},
+
 	// Delete the file at a given path if it exists.
 	deleteFileIfExists: function (path) {
 		var ctx = this;
@@ -52,10 +76,15 @@ module.exports = GruntGenBase.extend({
 			if (this.clean) {
 				this.log(chalk.yellow("Cleaning grunt generator..."));
 
-				var path = this.destinationRoot() + "/Gruntfile.coffee";
+				var paths = [
+					this.destinationRoot() + "/Gruntfile.js",
+					this.destinationRoot() + "/Gruntfile.coffee"
+				]
 				var ctx = this;
 
-				this.deleteFileIfExists(path);
+				paths.forEach(function (path) {
+					ctx.deleteFileIfExists(path);
+				});
 				
 				if (this.exitAfterClean) {
 					// Exit the generator
@@ -65,8 +94,20 @@ module.exports = GruntGenBase.extend({
 		}
 	},
 
-	gruntfile: function () {
-		this.log(chalk.yellow("Adding Grunt file to project..."));
-		this.template("Gruntfile.coffee", "Gruntfile.coffee");
+	writing: {
+		gruntfile: function () {
+			this.log(chalk.yellow("Adding Grunt file to project..."));
+			this.template("Gruntfile.js");
+		}
+	},
+
+	install: {
+		installGruntAndPlugins: function () {
+			this.log(chalk.yellow("Installing dependencies..."));
+			this.installGrunt();
+			this.installGruntClean();
+			this.installGruntConnect();
+			this.installGruntCopy();
+		}		
 	}
 });
