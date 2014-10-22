@@ -1,5 +1,14 @@
 "use strict";
 
+/*
+	Fire Grunt
+
+	Adds grunt to the project it is called within.
+
+	Author:	Liam Howell <lhowell@mobiquityinc.com>
+	Since:	10-22-2014
+*/
+
 // --------------------------------------------------------------------- Imports
 
 var yeoman = require("yeoman-generator");
